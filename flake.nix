@@ -84,6 +84,7 @@
           ];
 
           packages = [
+            pkgs.git
             upScript
             setupScript
           ] ++ (builtins.attrValues dpanelScripts);

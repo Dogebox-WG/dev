@@ -1,3 +1,6 @@
+# TODO:
+# - check and update configuration.nix to include required stanzas
+
 check_and_clone() {
   if [ ! -d "$1" ]; then
     echo "$1 missing, cloning..."
@@ -12,11 +15,22 @@ if [ ! -f /etc/nixos/configuration.nix ]; then
   exit 1
 fi
 
-pushd ..
-  check_and_clone dogeboxd
-  check_and_clone dkm
-  check_and_clone dpanel
-popd
+# Determine if we're being run from inside a cloned version
+# of the dev flake, or if we're running from a github: remote flake.
+# TODO: Be smarter about this.
+IS_CWD_GIT_REPO=$(git rev-parse --is-inside-work-tree 2>/dev/null)
 
-# TODO:
-# - check and update configuration.nix to include required stanzas
+
+if [ "$IS_CWD_GIT_REPO" == "true" ]; then
+  # Assume we're inside a cloned version of this repo.
+  pushd ..
+fi
+
+check_and_clone dogeboxd
+check_and_clone dkm
+check_and_clone dpanel
+
+if [ "$IS_CWD_GIT_REPO" == "true" ]; then
+  popd
+fi
+
