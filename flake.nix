@@ -67,7 +67,7 @@
           let
             sessionName = input.dbxSessionName.${system};
             startCommand = input.dbxStartCommand.${system};
-            cwd = input.dbxCWD.${system};
+            cwd = if builtins.hasAttr "dbxCWD" input && input.dbxCWD.${system} != null then input.dbxCWD.${system} else null;
           in {
             upScript = mkServiceUpScript sessionName startCommand cwd;
             downScript = mkTerminateSessionScript sessionName;
@@ -76,6 +76,7 @@
       in {
         devShells.default = let
           dpanelScripts = mkServiceScripts dpanel;
+          dogeboxdScripts = mkServiceScripts dogeboxd;
         in pkgs.mkShell {
           inputsFrom = [
             dogeboxd.devShells.${system}.default
@@ -87,7 +88,10 @@
             pkgs.git
             upScript
             setupScript
-          ] ++ (builtins.attrValues dpanelScripts);
+          ]
+            ++ (builtins.attrValues dpanelScripts)
+            ++ (builtins.attrValues dogeboxdScripts)
+          ;
         };
 
         apps = {

@@ -20,7 +20,6 @@ fi
 # TODO: Be smarter about this.
 IS_CWD_GIT_REPO=$(git rev-parse --is-inside-work-tree 2>/dev/null)
 
-
 if [ "$IS_CWD_GIT_REPO" == "true" ]; then
   # Assume we're inside a cloned version of this repo.
   pushd ..
