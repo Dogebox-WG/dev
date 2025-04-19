@@ -31,9 +31,10 @@
         upScript = pkgs.writeShellScriptBin "dbx-up" (builtins.readFile ./scripts/up.sh);
         setupScript = pkgs.writeShellScriptBin "dbx-setup" (builtins.readFile ./scripts/setup.sh);
 
-        mkServiceUpScript = dbxSessionName: dbxStartCommand:
-          pkgs.writeShellScriptBin "${dbxSessionName}-up" ''
-          pushd TODO
+        mkServiceUpScript = dbxSessionName: dbxStartCommand: dbxCWD: let
+          pushd = "pushd ../${dbxSessionName}/" + (if dbxCWD == null then "" else dbxCWD);
+        in pkgs.writeShellScriptBin "${dbxSessionName}-up" ''
+          ${pushd}
             screen -dmS ${dbxSessionName} ${dbxStartCommand}
             echo "Started ${dbxSessionName} in screen session '${dbxSessionName}'"
             echo "Run 'screen -r ${dbxSessionName}' to attach to the session"
@@ -66,8 +67,9 @@
           let
             sessionName = input.dbxSessionName.${system};
             startCommand = input.dbxStartCommand.${system};
+            cwd = input.dbxCWD.${system};
           in {
-            upScript = mkServiceUpScript sessionName startCommand;
+            upScript = mkServiceUpScript sessionName startCommand cwd;
             downScript = mkTerminateSessionScript sessionName;
             attachScript = mkAttachSessionScript sessionName;
           };
