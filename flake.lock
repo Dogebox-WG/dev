@@ -10,22 +10,24 @@
         ]
       },
       "locked": {
-        "lastModified": 1744970883,
-        "narHash": "sha256-6ARBBii7pOZN+wWUoRiiUexyeHWwyt0suv42Se7l7u4=",
+        "lastModified": 1745585544,
+        "narHash": "sha256-oB5pX8dXVN6HvrUAdkDKEW6NNAShc+O0JYFc6zAdlZI=",
         "owner": "dogebox-wg",
         "repo": "dkm",
-        "rev": "80f1d140a2635e55325cd9a4c6508d18fe975d03",
+        "rev": "fe17a45f030539737af43f596ed93a3f57fd7d93",
         "type": "github"
       },
       "original": {
         "owner": "dogebox-wg",
-        "ref": "dev-flake",
         "repo": "dkm",
         "type": "github"
       }
     },
     "dogeboxd": {
       "inputs": {
+        "dpanel-src": [
+          "dpanel"
+        ],
         "flake-utils": [
           "flake-utils"
         ],
@@ -34,16 +36,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1744965747,
-        "narHash": "sha256-owUwjURnK7b2Nb+L6Zvgo9gbbNqn+2RPtduWA5W59IM=",
+        "lastModified": 1745993487,
+        "narHash": "sha256-PHVgV9XVILVuGsTA85mLbMqb3mLLwUGLZ0dfxborjcI=",
         "owner": "dogebox-wg",
         "repo": "dogeboxd",
-        "rev": "474496aeb3a003259647f0f82c2242259405883b",
+        "rev": "1253bdc6908c6598c92010b5b8a88f69ff895b6a",
         "type": "github"
       },
       "original": {
         "owner": "dogebox-wg",
-        "ref": "dev-flake",
         "repo": "dogeboxd",
         "type": "github"
       }
@@ -58,16 +59,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1744988136,
-        "narHash": "sha256-xWBUKqYFCqGRu2IATAkhi6Y2BbWnRf+dbVYB3R63f+o=",
+        "lastModified": 1745983412,
+        "narHash": "sha256-TLfZU0/zuhyx1J4DOLPg962ma0vJs7HYF9zjSCJ1Vh4=",
         "owner": "dogebox-wg",
         "repo": "dpanel",
-        "rev": "7836b7cab8f798d3e5922a3219d1845a4e6122cd",
+        "rev": "6cb1a74508bb0aa0d44aa41dbb2a3315fec0dadb",
         "type": "github"
       },
       "original": {
         "owner": "dogebox-wg",
-        "ref": "dev-flake",
         "repo": "dpanel",
         "type": "github"
       }

@@ -5,20 +5,21 @@
     nixpkgs.url = "nixpkgs/nixos-24.11";
     flake-utils.url = "github:numtide/flake-utils";
 
-    dogeboxd = {
-      url = "github:dogebox-wg/dogeboxd/dev-flake";
+    dpanel = {
+      url = "github:dogebox-wg/dpanel";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
+    };
+
+    dogeboxd = {
+      url = "github:dogebox-wg/dogeboxd";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.dpanel-src.follows = "dpanel";
     };
 
     dkm = {
-      url = "github:dogebox-wg/dkm/dev-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-    };
-
-    dpanel = {
-      url = "github:dogebox-wg/dpanel/dev-flake";
+      url = "github:dogebox-wg/dkm";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
@@ -28,8 +29,10 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        upScript = pkgs.writeShellScriptBin "dbx-up" (builtins.readFile ./scripts/up.sh);
-        setupScript = pkgs.writeShellScriptBin "dbx-setup" (builtins.readFile ./scripts/setup.sh);
+        upScript = pkgs.writeShellScriptBin "up" (builtins.readFile ./scripts/up.sh);
+        downScript = pkgs.writeShellScriptBin "down" (builtins.readFile ./scripts/down.sh);
+        restartScript = pkgs.writeShellScriptBin "r" (builtins.readFile ./scripts/restart.sh);
+        setupScript = pkgs.writeShellScriptBin "setup" (builtins.readFile ./scripts/setup.sh);
 
         mkServiceUpScript = dbxSessionName: dbxStartCommand: dbxCWD: let
           pushd = "pushd ../${dbxSessionName}/" + (if dbxCWD == null then "" else dbxCWD);
@@ -77,6 +80,7 @@
         devShells.default = let
           dpanelScripts = mkServiceScripts dpanel;
           dogeboxdScripts = mkServiceScripts dogeboxd;
+          dkmScripts = mkServiceScripts dkm;
         in pkgs.mkShell {
           inputsFrom = [
             dogeboxd.devShells.${system}.default
@@ -86,11 +90,15 @@
 
           packages = [
             pkgs.git
+            pkgs.screen
             upScript
+            downScript
+            restartScript
             setupScript
           ]
             ++ (builtins.attrValues dpanelScripts)
             ++ (builtins.attrValues dogeboxdScripts)
+            ++ (builtins.attrValues dkmScripts)
           ;
         };
 
