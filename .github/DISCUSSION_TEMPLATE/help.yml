@@ -19,14 +19,7 @@ body:
     validations:
       required: true
       
-  - type: textarea
-    id: problem-description
-    attributes:
-      label: Describe your problem
-      description: "Please provide a detailed description of what you're experiencing"
-      placeholder: "Explain what you're trying to do, what's happening, and what you expected to happen..."
-    validations:
-      required: true
+
   - type: textarea
     id: environment-info
     attributes:
@@ -65,9 +58,9 @@ body:
     attributes:
       label: Quick checks
       options:
-        - label: I've checked the documentation
+        - label: I've read the documentation
           required: false
-        - label: I've searched existing issues
+        - label: I've checked existing issues
           required: false
         - label: I've tried the troubleshooting guide
           required: false

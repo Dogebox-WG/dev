@@ -13,7 +13,7 @@ body:
   - type: input
     id: feature-name
     attributes:
-      label: Feature Name
+      label: Feature Title
       description: "What would you like to call this feature?"
       placeholder: "e.g., Dark Mode, Advanced Search, Real-time Collaboration"
     validations:
