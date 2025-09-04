@@ -1,0 +1,49 @@
+title: "[Feature Idea] "
+labels: ["enhancement", "feature-idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 💡 New Feature Idea
+        
+        Share your idea for a new feature! This is a casual discussion space for exploring possibilities.
+        
+        ---
+        
+  - type: input
+    id: feature-name
+    attributes:
+      label: Feature Title
+      description: "What would you like to call this feature?"
+      placeholder: "e.g., Dark Mode, Advanced Search, Real-time Collaboration"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: "Describe what this feature does and how it works"
+      placeholder: "Tell us about your feature idea..."
+    validations:
+      required: true
+      
+  - type: textarea
+    id: use-case-example
+    attributes:
+      label: Use Case / Example
+      description: "Describe a specific scenario where this feature would be useful"
+      placeholder: "For example: 'When I'm working late at night, I'd like to switch to dark mode to reduce eye strain...'"
+    validations:
+      required: true
+      
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        **Thanks for sharing your idea!** 🎉
+        
+        This is a casual discussion space - feel free to iterate on your idea based on community feedback.
+        
+        💡 **Note:** Once your idea has been developed and refined through discussion, it may be ready to become a formal Request for Discussion (RFD) for serious consideration and implementation planning.

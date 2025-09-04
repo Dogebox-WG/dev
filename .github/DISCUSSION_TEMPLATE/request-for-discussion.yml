@@ -1,0 +1,166 @@
+title: "[RFD] "
+labels: ["enhancement", "rfd", "feature-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📋 Request for Discussion (RFD)
+        
+        This is a formal proposal for a significant feature or architectural change. Please provide comprehensive information to facilitate thorough community discussion and evaluation.
+        
+        **Based on the [Oxide Computer RFD process](https://rfd.shared.oxide.computer/rfd/0001)**
+        
+        ---
+        
+  - type: input
+    id: feature-name
+    attributes:
+      label: Feature/Change Name
+      description: "What is this proposal called?"
+      placeholder: "e.g., New Authentication System, API Redesign, Database Migration"
+    validations:
+      required: true
+      
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Detailed Description
+      description: "Comprehensive description of what this proposal entails"
+      placeholder: "Provide a thorough explanation of the feature or change..."
+      value: |
+        ## What is this proposal?
+        
+        ## How does it work?
+        
+        ## What problem does it solve?
+        
+        ## Scope and boundaries
+        
+    validations:
+      required: true
+      
+  - type: textarea
+    id: viable-options
+    attributes:
+      label: Viable Options Analysis
+      description: "Document the viable options and the benefits/drawbacks of each"
+      placeholder: "Analyze different approaches to implementing this proposal..."
+      value: |
+        ## Option 1: [Description]
+        - Benefits:
+        - Drawbacks:
+        - Implementation complexity:
+        
+        ## Option 2: [Description]
+        - Benefits:
+        - Drawbacks:
+        - Implementation complexity:
+        
+        ## Recommended approach and reasoning:
+        
+    validations:
+      required: true
+      
+  - type: textarea
+    id: reasoning-data
+    attributes:
+      label: Reasoning and Data
+      description: "Document your reasoning including data and references wherever possible"
+      placeholder: "Explain the decision-making process and provide supporting evidence..."
+      value: |
+        ## Decision factors:
+        
+        ## Supporting data:
+        
+        ## References and research:
+        
+        ## Trade-offs considered:
+        
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: "How urgent is this proposal?"
+      options:
+        - Low - Nice to have, can wait
+        - Medium - Important but not urgent
+        - High - Important and should be prioritized
+        - Critical - Essential for project success
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Estimated Complexity
+      description: "How complex would this be to implement?"
+      options:
+        - Simple - Minor changes, low risk
+        - Moderate - Some architectural changes needed
+        - Complex - Significant architectural changes required
+        - Very Complex - Major refactoring or new systems needed
+    validations:
+      required: true
+      
+  - type: textarea
+    id: community-project-impact
+    attributes:
+      label: Community and Project Impact
+      description: "Consider the broader impact on the project, contributors, and users"
+      placeholder: "Analyze how this proposal affects the project ecosystem..."
+      value: |
+        ## Resource considerations:
+        - Time and effort implications:
+        - Short-term vs long-term project impact:
+        
+        ## User and contributor outcomes:
+        - How does this impact users and contributors?
+        - What are the outcomes vs alternatives?
+        
+        ## Performance implications:
+        - Performance impact:
+        - Benchmarks or metrics:
+        
+        ## Security considerations:
+        - Security implications:
+        - Risk assessment:
+        
+    validations:
+      required: true
+      
+
+      
+  - type: checkboxes
+    attributes:
+      label: Impact Assessment
+      options:
+        - label: This proposal would require breaking changes
+          required: false
+        - label: This proposal would affect existing APIs
+          required: false
+        - label: This proposal would require new dependencies
+          required: false
+        - label: This proposal would need documentation updates
+          required: false
+        - label: This proposal would need testing updates
+          required: false
+        - label: This proposal has security implications
+          required: false
+          
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        ## 📋 Next Steps
+        
+        This RFD will be:
+        1. Reviewed by the community for thorough discussion
+        2. Evaluated for feasibility, priority, and implementation approach
+        3. Refined based on feedback and additional information
+        4. Either approved for implementation or refined further
+        
+        **Thank you for your comprehensive proposal!** 🎯

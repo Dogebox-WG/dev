@@ -1,0 +1,29 @@
+title: "[Improvement] "
+labels: ["enhancement", "improvement", "feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🔧 Improvement Suggestion
+        
+        Share your thoughts on how something could be improved!
+        
+        ---
+        
+  - type: textarea
+    id: improvement-suggestion
+    attributes:
+      label: Improvement Suggestion
+      description: "If the objective is FOO, I think it suffers because of BAR and could be improved with BAZ"
+      placeholder: "If the objective is [describe the goal/purpose], I think it suffers because of [describe the current issue/problem] and could be improved with [describe your suggested improvement]"
+    validations:
+      required: true
+      
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        **Thanks for your improvement suggestion!** 🎯
+        
+        We appreciate feedback that helps make things better for everyone.
