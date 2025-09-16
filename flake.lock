@@ -22,14 +22,18 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1758027636,
-        "narHash": "sha256-POqp4ygE25B7M0XO49zqwzbQ2G4mH+RdCPo7ydUD/LA=",
-        "path": "/Users/adam/code/dogebox-wg/os-dev",
-        "type": "path"
+        "lastModified": 1758027988,
+        "narHash": "sha256-nykPF1XISmNTOVWNiAM0Bl7qAhQFhXsEnERsk1wnouQ=",
+        "owner": "dogebox-wg",
+        "repo": "os",
+        "rev": "ad2a4c34c7511089a13429dac6b8b2122aac4699",
+        "type": "github"
       },
       "original": {
-        "path": "/Users/adam/code/dogebox-wg/os-dev",
-        "type": "path"
+        "owner": "dogebox-wg",
+        "ref": "dev-flake",
+        "repo": "os",
+        "type": "github"
       }
     },
     "dkm": {
