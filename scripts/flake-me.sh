@@ -45,10 +45,20 @@ echo "Install bootloader? (y/n)"
 
 read -n 1 -s confirm
 
-if [ "$confirm" = "y" ]; then
-  flake="aarch64-bootloader"
+arch="$(uname -m)"
+if [ "$arch" = "aarch64" ]; then
+  base_flake="aarch64"
+elif [ "$arch" = "x86_64" ]; then
+  base_flake="x86_64"
 else
-  flake="aarch64"
+  echo "Unsupported architecture: $arch"
+  exit 1
+fi
+
+if [ "$confirm" = "y" ]; then
+  flake="${base_flake}-bootloader"
+else
+  flake="${base_flake}"
 fi
 
 echo
