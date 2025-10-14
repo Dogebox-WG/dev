@@ -22,11 +22,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1758027988,
-        "narHash": "sha256-nykPF1XISmNTOVWNiAM0Bl7qAhQFhXsEnERsk1wnouQ=",
+        "lastModified": 1760417963,
+        "narHash": "sha256-YwiXx0t08BZ//FLjry1ygknYirZf69SY90QBbSggPEQ=",
         "owner": "dogebox-wg",
         "repo": "os",
-        "rev": "ad2a4c34c7511089a13429dac6b8b2122aac4699",
+        "rev": "e89a47f3e6c30f2de8b3049fafd8ce6ceb624bc8",
         "type": "github"
       },
       "original": {
