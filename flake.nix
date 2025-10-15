@@ -2,7 +2,7 @@
   description = "Unified dev environment for the Dogebox";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-24.11";
+    nixpkgs.url = "nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
 
     dpanel = {
