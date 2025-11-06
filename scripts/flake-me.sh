@@ -144,6 +144,15 @@ else
 
 EOF
   
+  # Add experimental features if not already present
+  if ! grep -q "nix.settings.experimental-features" "$CONFIG_FILE"; then
+    cat >> "$TEMP_WRAPPERS" << 'EOF'
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+EOF
+    echo "Will add nix experimental features"
+  fi
+  
   # Replace the placeholder with the actual path
   sed -i.bak "s|DOGEBOXD_PATH_PLACEHOLDER|$DOGEBOXD_PATH|g" "$TEMP_WRAPPERS"
   
