@@ -18,6 +18,39 @@ fi
 
 echo
 echo
+echo "We need to know the location of your local dogeboxd repository."
+echo "Searching for it in lateral directories..."
+
+# Search for dogeboxd
+DOGEBOXD_PATH=""
+if [ -d "../../dogeboxd" ]; then
+  echo "Found dogeboxd in $(realpath ../../dogeboxd)"
+  echo "Is this correct? (y/n)"
+  read -n 1 -s confirm
+  echo
+  if [ "$confirm" = "y" ]; then
+    DOGEBOXD_PATH="$(realpath ../../dogeboxd)"
+  fi
+else
+  echo "dogeboxd not found in ../../dogeboxd"
+fi
+
+# If we still don't have a path, prompt the user for it.
+if [ -z "$DOGEBOXD_PATH" ]; then
+  echo "Provide the path to the dogeboxd repository: "
+  read -e DOGEBOXD_PATH
+  DOGEBOXD_PATH="$(realpath "$DOGEBOXD_PATH" 2>/dev/null)"
+fi
+
+# Validate dogeboxd path
+if [ ! -d "$DOGEBOXD_PATH" ]; then
+  echo "Error: Invalid path for dogeboxd repository: $DOGEBOXD_PATH"
+  echo "Directory does not exist. Aborting..."
+  exit 1
+fi
+
+echo
+echo
 echo "We're going to move your existing non-flake configuration from /etc/nixos to /etc/nixos-dev"
 echo "This means that your current system changes, if any, should still be applied."
 echo "And that if you want to modify things, change /etc/nixos-dev, as /etc/nixos will be overriden on rebuilds."
@@ -71,6 +104,62 @@ read -n 1 -s confirm
 if [ "$confirm" != "y" ]; then
   echo "Aborting..."
   exit 1
+fi
+
+CONFIG_FILE="/etc/nixos-dev/configuration.nix"
+echo "Adding dogeboxd security wrappers to $CONFIG_FILE"
+
+# Check if security wrappers are already present
+if grep -q "security.wrappers.dbx" "$CONFIG_FILE"; then
+  echo "Security wrappers already present in configuration.nix, skipping..."
+else
+  # Add 'lib' to the function parameters if not already present
+  if ! grep -q "{ config, pkgs, lib" "$CONFIG_FILE"; then
+    sudo sed -i.bak 's/{ config, pkgs, modulesPath/{ config, pkgs, lib, modulesPath/g' "$CONFIG_FILE"
+    echo "Added 'lib' to configuration.nix imports"
+  fi
+  
+  # Create a temporary file with the security wrappers block
+  TEMP_WRAPPERS=$(mktemp)
+  cat > "$TEMP_WRAPPERS" << 'EOF'
+  security.wrappers.dbx = lib.mkForce {
+    source = "DOGEBOXD_PATH_PLACEHOLDER/build/dbx";
+    owner = "$USER";
+    group = "users";
+  };
+ 
+  security.wrappers.dogeboxd = lib.mkForce {
+    source = "DOGEBOXD_PATH_PLACEHOLDER/build/dogeboxd";
+    capabilities = "cap_net_bind_service=+ep";
+    owner = "$USER";
+    group = "users";
+  };
+ 
+  security.wrappers._dbxroot = lib.mkForce {
+    source = "DOGEBOXD_PATH_PLACEHOLDER/build/_dbxroot";
+    owner = "root";
+    group = "root";
+    setuid = true;
+  };
+
+EOF
+  
+  # Replace the placeholder with the actual path
+  sed -i.bak "s|DOGEBOXD_PATH_PLACEHOLDER|$DOGEBOXD_PATH|g" "$TEMP_WRAPPERS"
+  
+  # Insert the wrappers block before the 'imports =' line using awk
+  sudo awk -v wrappers="$(cat $TEMP_WRAPPERS)" '
+    /imports =/ && !inserted {
+      print wrappers
+      inserted = 1
+    }
+    { print }
+  ' "$CONFIG_FILE" > "${CONFIG_FILE}.new"
+  
+  sudo mv "${CONFIG_FILE}.new" "$CONFIG_FILE"
+  rm -f "$TEMP_WRAPPERS"
+  
+  echo "Added security wrappers to configuration.nix"
 fi
 
 # We need to run with `--impure` as we might have files
