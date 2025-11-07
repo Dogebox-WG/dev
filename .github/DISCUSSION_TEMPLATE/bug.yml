@@ -1,0 +1,129 @@
+title: "[Bug] "
+labels: ["bug", "bug-report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐛 Bug Report
+        
+        Found a bug? Please describe it in detail and provide steps to reproduce it.
+        
+        ---
+
+  - type: input
+    id: bug-title
+    attributes:
+      label: Brief Bug Title
+      description: "A short, descriptive title for the bug"
+      placeholder: "e.g., Login fails with invalid credentials, Button not clickable on mobile"
+    validations:
+      required: true
+        
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description (IF-WHEN-THEN)
+      description: "Describe the bug using the IF-WHEN-THEN format"
+      placeholder: "IF I do this action, WHEN this condition exists, THEN this unexpected behavior occurs"
+      value: |
+        **IF** I [describe the action you took]
+        
+        **WHEN** [describe the context/conditions]
+        
+        **THEN** [describe what actually happened instead of the expected behavior]
+        
+        **Expected behavior:** [describe what should have happened]
+        
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Bug Severity
+      description: "How severe is this bug?"
+      options:
+        - Low - Minor issue, doesn't affect core functionality
+        - Medium - Noticeable issue, affects some functionality
+        - High - Significant issue, affects core functionality
+        - Critical - Blocks core functionality or causes data loss
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How Often Does This Happen?
+      description: "How frequently do you encounter this bug?"
+      options:
+        - Always - Happens every time
+        - Often - Happens most of the time
+        - Sometimes - Happens occasionally
+        - Rarely - Happens infrequently
+        - Once - Only happened once
+    validations:
+      required: true
+      
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: "Detailed steps to reproduce the bug"
+      placeholder: "1. Go to...\n2. Click on...\n3. Enter...\n4. See error..."
+      value: |
+        1. [First step]
+        2. [Second step]
+        3. [Third step]
+        4. [Continue as needed...]
+        
+    validations:
+      required: true
+      
+  - type: textarea
+    id: environment-details
+    attributes:
+      label: Environment Details
+      description: "Information about your system and environment"
+      placeholder: "Provide details about your setup..."
+      value: |
+        **Dogebox OS Version:** [e.g., 1.0.0]
+        
+        **Platform:** [e.g., T6 or Vitrual Machine]
+        
+        **Additional context:** [Any other relevant environment details]
+        
+    validations:
+      required: true
+      
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: "Any other information that might be helpful"
+      placeholder: "Screenshots, error messages, logs, or other relevant information..."
+      value: |
+        **Error messages or logs:**
+        [Paste any error messages, stack traces, or logs here]
+        
+        **Screenshots:**
+        [If you have screenshots, describe what they show]
+        
+        **Related issues:**
+        [Link to any related issues or discussions]
+        
+    validations:
+      required: false
+      
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        ## 🔍 Next Steps
+        
+        Once this bug report is submitted:
+        1. The community will review and reproduce the issue
+        2. We'll investigate the root cause
+        3. We'll prioritize based on severity and impact
+        
+        **Thank you for helping improve the project!** 🐛

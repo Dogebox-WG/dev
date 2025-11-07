@@ -1,0 +1,81 @@
+title: "[Help] "
+labels: ["help", "question", "support"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ❓ Need Help?
+        
+        If you're having trouble with something, we're here to help! Please provide as much detail as possible.
+        
+        ---
+        
+  - type: input
+    id: help-title
+    attributes:
+      label: What do you need help with?
+      description: "Brief description of what you're trying to do or what problem you're facing"
+      placeholder: "e.g., Installation issues, Configuration problems, Usage questions"
+    validations:
+      required: true
+      
+
+  - type: textarea
+    id: environment-info
+    attributes:
+      label: Environment Details
+      description: "Information about your system and environment"
+      placeholder: "Provide details about your setup..."
+      value: |
+        **Dogebox OS Version:** [e.g., 1.0.0]
+        
+        **Platform:** [e.g., T6 or Vitrual Machine]
+        
+        **Additional context:** [Any other relevant environment details]
+        
+    validations:
+      required: true
+      
+  - type: textarea
+    id: error-messages
+    attributes:
+      label: Error messages or logs
+      description: "If you're getting error messages, please share them here"
+      placeholder: "Paste any error messages, warnings, or logs you're seeing..."
+    validations:
+      required: false
+      
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: "Any other information that might be helpful"
+      placeholder: "Screenshots, links to documentation you've read, or other relevant details..."
+    validations:
+      required: false
+      
+  - type: checkboxes
+    attributes:
+      label: Quick checks
+      options:
+        - label: I've read the documentation
+          required: false
+        - label: I've checked existing issues
+          required: false
+        - label: I've tried the troubleshooting guide
+          required: false
+          
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        ## 🤝 Getting Help
+        
+        Once you submit this help request:
+        1. Community members will review your issue
+        2. We'll provide guidance and solutions
+        3. We may ask for additional information
+        4. We'll help you get back on track
+        
+        **We're here to help!** 💪
