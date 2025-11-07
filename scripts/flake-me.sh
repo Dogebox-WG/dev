@@ -3,6 +3,9 @@ if [ "$EUID" -ne 0 ]; then
   exec sudo "$0" "$@"
 fi
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 echo
 echo
 echo "This is a destructive operation, we will be replacing your existing NixOS system configuration"
@@ -23,16 +26,17 @@ echo "Searching for it in lateral directories..."
 
 # Search for dogeboxd
 DOGEBOXD_PATH=""
-if [ -d "../../dogeboxd" ]; then
-  echo "Found dogeboxd in $(realpath ../../dogeboxd)"
+SEARCH_PATH="$SCRIPT_DIR/../../dogeboxd"
+if [ -d "$SEARCH_PATH" ]; then
+  echo "Found dogeboxd in $(realpath "$SEARCH_PATH")"
   echo "Is this correct? (y/n)"
   read -n 1 -s confirm
   echo
   if [ "$confirm" = "y" ]; then
-    DOGEBOXD_PATH="$(realpath ../../dogeboxd)"
+    DOGEBOXD_PATH="$(realpath "$SEARCH_PATH")"
   fi
 else
-  echo "dogeboxd not found in ../../dogeboxd"
+  echo "dogeboxd not found in $SEARCH_PATH"
 fi
 
 # If we still don't have a path, prompt the user for it.
