@@ -42,8 +42,8 @@
         upScript = pkgs.writeShellScriptBin "up" (builtins.readFile ./scripts/up.sh);
         downScript = pkgs.writeShellScriptBin "down" (builtins.readFile ./scripts/down.sh);
         restartScript = pkgs.writeShellScriptBin "r" (builtins.readFile ./scripts/restart.sh);
+        cloneReposScript = pkgs.writeShellScriptBin "clone-repos" (builtins.readFile ./scripts/clone-repos.sh);
         setupScript = pkgs.writeShellScriptBin "setup" (builtins.readFile ./scripts/setup.sh);
-        flakeMeScript = pkgs.writeShellScriptBin "flake-me" (builtins.readFile ./scripts/flake-me.sh);
 
         mkServiceUpScript = dbxSessionName: dbxStartCommand: dbxCWD:
           let pushd = "pushd ../${dbxSessionName}/" + (if dbxCWD == null then "" else dbxCWD);
@@ -101,20 +101,20 @@
             dpanel.devShells.${system}.default
           ];
           packages =
-            [ pkgs.git pkgs.screen upScript downScript restartScript setupScript ]
+            [ pkgs.git pkgs.screen upScript downScript restartScript cloneReposScript setupScript ]
             ++ (builtins.attrValues dpanelScripts)
             ++ (builtins.attrValues dogeboxdScripts)
             ++ (builtins.attrValues dkmScripts);
         };
 
-        apps.setup = {
+        apps.clone-repos = {
           type = "app";
-          program = "${setupScript}/bin/dbx-setup";
+          program = "${cloneReposScript}/bin/dbx-setup";
         };
 
-        apps.flake-me = {
+        apps.setup = {
           type = "app";
-          program = "${flakeMeScript}/bin/flake-me";
+          program = "${setupScript}/bin/setup";
         };
       };
 
