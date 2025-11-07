@@ -22,29 +22,9 @@ fi
 echo
 echo
 echo "We need to know the location of your local dogeboxd repository."
-echo "Searching for it in lateral directories..."
-
-# Search for dogeboxd
-DOGEBOXD_PATH=""
-SEARCH_PATH="$SCRIPT_DIR/../../dogeboxd"
-if [ -d "$SEARCH_PATH" ]; then
-  echo "Found dogeboxd in $(realpath "$SEARCH_PATH")"
-  echo "Is this correct? (y/n)"
-  read -n 1 -s confirm
-  echo
-  if [ "$confirm" = "y" ]; then
-    DOGEBOXD_PATH="$(realpath "$SEARCH_PATH")"
-  fi
-else
-  echo "dogeboxd not found in $SEARCH_PATH"
-fi
-
-# If we still don't have a path, prompt the user for it.
-if [ -z "$DOGEBOXD_PATH" ]; then
-  echo "Provide the path to the dogeboxd repository: "
-  read -e DOGEBOXD_PATH
-  DOGEBOXD_PATH="$(realpath "$DOGEBOXD_PATH" 2>/dev/null)"
-fi
+echo "Provide the path to the dogeboxd repository: "
+read -e DOGEBOXD_PATH
+DOGEBOXD_PATH="$(realpath "$DOGEBOXD_PATH" 2>/dev/null)"
 
 # Validate dogeboxd path
 if [ ! -d "$DOGEBOXD_PATH" ]; then
