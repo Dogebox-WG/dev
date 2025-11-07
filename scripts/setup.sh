@@ -156,7 +156,7 @@ fi
 
 # We need to run with `--impure` as we might have files
 # outside of our flake that must be included in /etc/nixos-dev.
-sudo nixos-rebuild switch --flake github:dogebox-wg/dev/flake-me#$flake -L --impure
+sudo nixos-rebuild switch --flake github:dogebox-wg/dev#$flake -L --impure
 
 echo
 echo
