@@ -22,8 +22,7 @@ fi
 echo
 echo
 echo "We need to know the location of your local dogeboxd repository."
-echo "Provide the path to the dogeboxd repository: "
-read -e DOGEBOXD_PATH
+read -e -p "Provide the path to the dogeboxd repository: " DOGEBOXD_PATH
 DOGEBOXD_PATH="$(realpath "$DOGEBOXD_PATH" 2>/dev/null)"
 
 # Validate dogeboxd path
