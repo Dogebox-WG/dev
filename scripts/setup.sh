@@ -35,7 +35,7 @@ fi
 # Check if flake.nix exists in the dogeboxd path
 if [ ! -f "$DOGEBOXD_PATH/flake.nix" ]; then
   echo "Error: No flake.nix found in $DOGEBOXD_PATH"
-  echo "This doesn't appear to be a dogeboxd repository. Aborting..."
+  echo "This doesn't appear to be a dogeboxd repository. Expected to find 'flake.nix'. Aborting..."
   exit 1
 fi
 
