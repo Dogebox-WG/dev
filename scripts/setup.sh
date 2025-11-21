@@ -32,6 +32,22 @@ if [ ! -d "$DOGEBOXD_PATH" ]; then
   exit 1
 fi
 
+# Check if flake.nix exists in the dogeboxd path
+if [ ! -f "$DOGEBOXD_PATH/flake.nix" ]; then
+  echo "Error: No flake.nix found in $DOGEBOXD_PATH"
+  echo "This doesn't appear to be a dogeboxd repository. Expected to find 'flake.nix'. Aborting..."
+  exit 1
+fi
+
+# Verify it's actually the dogeboxd flake by checking for dogeboxd-specific content
+if ! grep -q "dogeboxdVendorHash\|packages.*dogeboxd" "$DOGEBOXD_PATH/flake.nix"; then
+  echo "Error: The flake.nix at $DOGEBOXD_PATH doesn't appear to be a dogeboxd repository"
+  echo "Expected to find 'dogeboxdVendorHash' or 'packages.dogeboxd' in the flake. Aborting..."
+  exit 1
+fi
+
+echo "✓ Confirmed dogeboxd repository at $DOGEBOXD_PATH"
+
 echo
 echo
 echo "We're going to move your existing non-flake configuration from /etc/nixos to /etc/nixos-dev"
