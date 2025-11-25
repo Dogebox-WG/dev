@@ -21,6 +21,19 @@ fi
 
 echo
 echo
+echo "Decide where you want to store your Dogebox configuration."
+echo "Default is $HOME/data".
+read -e -p "Enter path to Dogebox data directory [${HOME}/data]: " DOGEBOX_DATA
+
+if [ -z "$DOGEBOX_DATA" ]; then
+  DOGEBOX_DATA="${HOME}/data"
+fi
+
+DOGEBOX_DATA="$(realpath -m "$DOGEBOX_DATA")"
+echo "Dogebox data will be stored at: $DOGEBOX_DATA"
+
+echo
+echo
 echo "We need to know the location of your local dogeboxd repository."
 read -e -p "Provide the path to the dogeboxd repository: " DOGEBOXD_PATH
 DOGEBOXD_PATH="$(realpath "$DOGEBOXD_PATH" 2>/dev/null)"
@@ -169,6 +182,9 @@ EOF
   
   echo "Added security wrappers to configuration.nix"
 fi
+
+echo "Setting override for dogebox data directory"
+echo $DOGEBOX_DATA > /etc/nixos-dev/datapath
 
 # We need to run with `--impure` as we might have files
 # outside of our flake that must be included in /etc/nixos-dev.
