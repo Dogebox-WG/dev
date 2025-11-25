@@ -1,11 +1,12 @@
-# Capture original user's HOME and username before privilege escalation
+# Capture original user's HOME, username, and flake branch before privilege escalation
 ORIGINAL_HOME="${HOME}"
 ORIGINAL_USER="${USER}"
+ORIGINAL_FLAKE_BRANCH="${FLAKE_BRANCH:-}"
 
 if [ "$EUID" -ne 0 ]; then
   echo "Script is not running as root. Attempting to escalate privileges with sudo..."
-  # Pass original HOME and USER as environment variables to the sudo command
-  exec sudo ORIGINAL_HOME="$ORIGINAL_HOME" ORIGINAL_USER="$ORIGINAL_USER" "$0" "$@"
+  # Pass original HOME, USER, and FLAKE_BRANCH as environment variables to the sudo command
+  exec sudo ORIGINAL_HOME="$ORIGINAL_HOME" ORIGINAL_USER="$ORIGINAL_USER" ORIGINAL_FLAKE_BRANCH="$ORIGINAL_FLAKE_BRANCH" "$0" "$@"
 fi
 
 # Get the directory where this script is located
@@ -191,9 +192,18 @@ fi
 echo "Setting override for dogebox data directory"
 echo $DOGEBOX_DATA > /etc/nixos-dev/datapath
 
+# Build the flake URL with optional branch
+if [ -n "$ORIGINAL_FLAKE_BRANCH" ]; then
+  FLAKE_URL="github:dogebox-wg/dev/${ORIGINAL_FLAKE_BRANCH}#${flake}"
+  echo "Using flake branch: $ORIGINAL_FLAKE_BRANCH"
+else
+  FLAKE_URL="github:dogebox-wg/dev#${flake}"
+fi
+
 # We need to run with `--impure` as we might have files
 # outside of our flake that must be included in /etc/nixos-dev.
-sudo nixos-rebuild switch --flake github:dogebox-wg/dev#$flake -L --impure
+echo "Running: nixos-rebuild switch --flake $FLAKE_URL -L --impure"
+sudo nixos-rebuild switch --flake "$FLAKE_URL" -L --impure
 
 echo
 echo

@@ -39,11 +39,22 @@
     perSystem = system:
       let
         pkgs = import nixpkgs { inherit system; };
+
+        # Extract branch/ref from flake source if available (e.g., from github:dogebox-wg/dev/abc#setup)
+        flakeBranch = if self ? sourceInfo && self.sourceInfo ? ref
+                      then self.sourceInfo.ref
+                      else null;
+
         upScript = pkgs.writeShellScriptBin "up" (builtins.readFile ./scripts/up.sh);
         downScript = pkgs.writeShellScriptBin "down" (builtins.readFile ./scripts/down.sh);
         restartScript = pkgs.writeShellScriptBin "r" (builtins.readFile ./scripts/restart.sh);
         cloneReposScript = pkgs.writeShellScriptBin "clone-repos" (builtins.readFile ./scripts/clone-repos.sh);
-        setupScript = pkgs.writeShellScriptBin "setup" (builtins.readFile ./scripts/setup.sh);
+        setupScriptBase = builtins.readFile ./scripts/setup.sh;
+        # Wrap setup script to inject the flake branch as an environment variable
+        setupScript = pkgs.writeShellScriptBin "setup" ''
+          export FLAKE_BRANCH="${if flakeBranch != null then flakeBranch else ""}"
+          ${setupScriptBase}
+        '';
 
         mkServiceUpScript = dbxSessionName: dbxStartCommand: dbxCWD:
           let pushd = "pushd ../${dbxSessionName}/" + (if dbxCWD == null then "" else dbxCWD);
