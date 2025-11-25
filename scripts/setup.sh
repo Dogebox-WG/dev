@@ -1,7 +1,8 @@
 # Capture original user's HOME, username, and flake branch before privilege escalation
-ORIGINAL_HOME="${HOME}"
-ORIGINAL_USER="${USER}"
-ORIGINAL_FLAKE_BRANCH="${FLAKE_BRANCH:-}"
+# Only capture if not already set (to preserve values passed through sudo)
+ORIGINAL_HOME="${ORIGINAL_HOME:-$HOME}"
+ORIGINAL_USER="${ORIGINAL_USER:-$USER}"
+ORIGINAL_FLAKE_BRANCH="${ORIGINAL_FLAKE_BRANCH:-${FLAKE_BRANCH:-}}"
 
 if [ "$EUID" -ne 0 ]; then
   echo "Script is not running as root. Attempting to escalate privileges with sudo..."
