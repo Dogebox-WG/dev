@@ -39,6 +39,7 @@
     perSystem = system:
       let
         pkgs = import nixpkgs { inherit system; };
+
         upScript = pkgs.writeShellScriptBin "up" (builtins.readFile ./scripts/up.sh);
         downScript = pkgs.writeShellScriptBin "down" (builtins.readFile ./scripts/down.sh);
         restartScript = pkgs.writeShellScriptBin "r" (builtins.readFile ./scripts/restart.sh);
