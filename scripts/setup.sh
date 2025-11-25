@@ -1,3 +1,18 @@
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --branch|-b)
+      FLAKE_BRANCH="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: setup [--branch <branch-name>]"
+      exit 1
+      ;;
+  esac
+done
+
 # Capture original user's HOME, username, and flake branch before privilege escalation
 # Only capture if not already set (to preserve values passed through sudo)
 ORIGINAL_HOME="${ORIGINAL_HOME:-$HOME}"
@@ -7,7 +22,11 @@ ORIGINAL_FLAKE_BRANCH="${ORIGINAL_FLAKE_BRANCH:-${FLAKE_BRANCH:-}}"
 if [ "$EUID" -ne 0 ]; then
   echo "Script is not running as root. Attempting to escalate privileges with sudo..."
   # Pass original HOME, USER, and FLAKE_BRANCH as environment variables to the sudo command
-  exec sudo ORIGINAL_HOME="$ORIGINAL_HOME" ORIGINAL_USER="$ORIGINAL_USER" ORIGINAL_FLAKE_BRANCH="$ORIGINAL_FLAKE_BRANCH" "$0" "$@"
+  exec sudo env \
+    ORIGINAL_HOME="$ORIGINAL_HOME" \
+    ORIGINAL_USER="$ORIGINAL_USER" \
+    ORIGINAL_FLAKE_BRANCH="$ORIGINAL_FLAKE_BRANCH" \
+    "$0"
 fi
 
 # Get the directory where this script is located
