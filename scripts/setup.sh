@@ -1,6 +1,11 @@
+# Capture original user's HOME and username before privilege escalation
+ORIGINAL_HOME="${HOME}"
+ORIGINAL_USER="${USER}"
+
 if [ "$EUID" -ne 0 ]; then
   echo "Script is not running as root. Attempting to escalate privileges with sudo..."
-  exec sudo "$0" "$@"
+  # Pass original HOME and USER as environment variables to the sudo command
+  exec sudo ORIGINAL_HOME="$ORIGINAL_HOME" ORIGINAL_USER="$ORIGINAL_USER" "$0" "$@"
 fi
 
 # Get the directory where this script is located
@@ -22,11 +27,11 @@ fi
 echo
 echo
 echo "Decide where you want to store your Dogebox configuration."
-echo "Default is $HOME/data".
-read -e -p "Enter path to Dogebox data directory [${HOME}/data]: " DOGEBOX_DATA
+echo "Default is ${ORIGINAL_HOME}/data".
+read -e -p "Enter path to Dogebox data directory [${ORIGINAL_HOME}/data]: " DOGEBOX_DATA
 
 if [ -z "$DOGEBOX_DATA" ]; then
-  DOGEBOX_DATA="${HOME}/data"
+  DOGEBOX_DATA="${ORIGINAL_HOME}/data"
 fi
 
 DOGEBOX_DATA="$(realpath -m "$DOGEBOX_DATA")"
@@ -133,17 +138,17 @@ else
   
   # Create a temporary file with the security wrappers block
   TEMP_WRAPPERS=$(mktemp)
-  cat > "$TEMP_WRAPPERS" << 'EOF'
+  cat > "$TEMP_WRAPPERS" << EOF
   security.wrappers.dbx = lib.mkForce {
     source = "DOGEBOXD_PATH_PLACEHOLDER/build/dbx";
-    owner = "$USER";
+    owner = "$ORIGINAL_USER";
     group = "users";
   };
  
   security.wrappers.dogeboxd = lib.mkForce {
     source = "DOGEBOXD_PATH_PLACEHOLDER/build/dogeboxd";
     capabilities = "cap_net_bind_service=+ep";
-    owner = "$USER";
+    owner = "$ORIGINAL_USER";
     group = "users";
   };
  
