@@ -1,6 +1,32 @@
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --branch|-b)
+      FLAKE_BRANCH="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: setup [--branch <branch-name>]"
+      exit 1
+      ;;
+  esac
+done
+
+# Capture original user's HOME, username, and flake branch before privilege escalation
+# Only capture if not already set (to preserve values passed through sudo)
+ORIGINAL_HOME="${ORIGINAL_HOME:-$HOME}"
+ORIGINAL_USER="${ORIGINAL_USER:-$USER}"
+ORIGINAL_FLAKE_BRANCH="${ORIGINAL_FLAKE_BRANCH:-${FLAKE_BRANCH:-}}"
+
 if [ "$EUID" -ne 0 ]; then
   echo "Script is not running as root. Attempting to escalate privileges with sudo..."
-  exec sudo "$0" "$@"
+  # Pass original HOME, USER, and FLAKE_BRANCH as environment variables to the sudo command
+  exec sudo env \
+    ORIGINAL_HOME="$ORIGINAL_HOME" \
+    ORIGINAL_USER="$ORIGINAL_USER" \
+    ORIGINAL_FLAKE_BRANCH="$ORIGINAL_FLAKE_BRANCH" \
+    "$0"
 fi
 
 # Get the directory where this script is located
@@ -18,6 +44,19 @@ if [ "$confirm" != "y" ]; then
   echo "Aborting..."
   exit 1
 fi
+
+echo
+echo
+echo "Decide where you want to store your Dogebox configuration."
+echo "Default is ${ORIGINAL_HOME}/data".
+read -e -p "Enter path to Dogebox data directory [${ORIGINAL_HOME}/data]: " DOGEBOX_DATA
+
+if [ -z "$DOGEBOX_DATA" ]; then
+  DOGEBOX_DATA="${ORIGINAL_HOME}/data"
+fi
+
+DOGEBOX_DATA="$(realpath -m "$DOGEBOX_DATA")"
+echo "Dogebox data will be stored at: $DOGEBOX_DATA"
 
 echo
 echo
@@ -120,17 +159,17 @@ else
   
   # Create a temporary file with the security wrappers block
   TEMP_WRAPPERS=$(mktemp)
-  cat > "$TEMP_WRAPPERS" << 'EOF'
+  cat > "$TEMP_WRAPPERS" << EOF
   security.wrappers.dbx = lib.mkForce {
     source = "DOGEBOXD_PATH_PLACEHOLDER/build/dbx";
-    owner = "$USER";
+    owner = "$ORIGINAL_USER";
     group = "users";
   };
  
   security.wrappers.dogeboxd = lib.mkForce {
     source = "DOGEBOXD_PATH_PLACEHOLDER/build/dogeboxd";
     capabilities = "cap_net_bind_service=+ep";
-    owner = "$USER";
+    owner = "$ORIGINAL_USER";
     group = "users";
   };
  
@@ -170,9 +209,21 @@ EOF
   echo "Added security wrappers to configuration.nix"
 fi
 
+echo "Setting override for dogebox data directory"
+echo $DOGEBOX_DATA > /etc/nixos-dev/datapath
+
+# Build the flake URL with optional branch
+if [ -n "$ORIGINAL_FLAKE_BRANCH" ]; then
+  FLAKE_URL="github:dogebox-wg/dev/${ORIGINAL_FLAKE_BRANCH}#${flake}"
+  echo "Using flake branch: $ORIGINAL_FLAKE_BRANCH"
+else
+  FLAKE_URL="github:dogebox-wg/dev#${flake}"
+fi
+
 # We need to run with `--impure` as we might have files
 # outside of our flake that must be included in /etc/nixos-dev.
-sudo nixos-rebuild switch --flake github:dogebox-wg/dev#$flake -L --impure
+echo "Running: nixos-rebuild switch --flake $FLAKE_URL -L --impure"
+sudo nixos-rebuild switch --flake "$FLAKE_URL" -L --impure
 
 echo
 echo
