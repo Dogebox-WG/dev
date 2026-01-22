@@ -25,7 +25,7 @@
     };
 
     dbxos = {
-      url = "github:dogebox-wg/os?ref=dev-flake";
+      url = "github:dogebox-wg/os";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
       inputs.dpanel.follows = "dpanel";
