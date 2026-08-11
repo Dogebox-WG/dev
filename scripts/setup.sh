@@ -110,8 +110,8 @@ echo "Copied /etc/nixos to /etc/nixos-dev"
 echo
 echo
 echo "Do you need a grub bootloader installed?"
-echo "If you're running in Orbstack or another fancy VM manager, you probably want to answer NO."
-echo "If you're in a fully-fledged VM manager (eg. VirtualBox, VMWare, Proxmox etc), you'll want to answer YES."
+echo "If you're running in a container (OrbStack, incus, LXC/Proxmox CT etc), you probably want to answer NO."
+echo "If you're running a full VM (VirtualBox, VMWare, Proxmox VM etc), you'll probably want to answer YES."
 echo "Install bootloader? (y/n)"
 
 read -n 1 -s confirm
@@ -147,15 +147,16 @@ fi
 CONFIG_FILE="/etc/nixos-dev/configuration.nix"
 echo "Adding dogeboxd security wrappers to $CONFIG_FILE"
 
+# Add 'lib' to the function parameters if not already present
+if ! grep -z -q "{.*lib,.*}:" "$CONFIG_FILE"; then
+  sudo sed -E -z -i.bak '0,/\{(.*\}:)/{s//\{ lib,\1/}' "$CONFIG_FILE"
+  echo "Added 'lib' to configuration.nix imports"
+fi
+
 # Check if security wrappers are already present
 if grep -q "security.wrappers.dbx" "$CONFIG_FILE"; then
   echo "Security wrappers already present in configuration.nix, skipping..."
 else
-  # Add 'lib' to the function parameters if not already present
-  if ! grep -q "{ config, pkgs, lib" "$CONFIG_FILE"; then
-    sudo sed -i.bak 's/{ config, pkgs, modulesPath/{ config, pkgs, lib, modulesPath/g' "$CONFIG_FILE"
-    echo "Added 'lib' to configuration.nix imports"
-  fi
   
   # Create a temporary file with the security wrappers block
   TEMP_WRAPPERS=$(mktemp)
